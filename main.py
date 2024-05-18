@@ -7,7 +7,7 @@ def check_multiply() -> None:
     функция для проверки перемножения
     """
     for size in [50, 100, 200, 250, 500, 750, 1000]:
-        if np.array_equal(np.dot(*[np.loadtxt(f'data/matrix_{name}_{size}.txt') \
+        if np.array_equal(np.dot(*[np.loadtxt(f'data/matrix{name}_{size}.txt') \
             for name in ['1', '2']]), np.loadtxt(f'data/multiply_result_{size}.txt')):
             print(f'Размеры {size} совпадают!')
         else:
@@ -19,8 +19,14 @@ def draw_graph() -> None:
     функция для построения графика зависимости времени перемножения матриц
     от их размера
     """
+    sizes = []
+    times = []
     with open('data/avg_times.txt', 'r') as file:
-        sizes, times = zip(*[map(int, line.strip().split('-')) for line in file])
+        for line in file:
+            parts = line.strip().split(' - ')
+            size, mean_time = parts[0], parts[1].split(': ')[1].split(' ms')[0]
+            sizes.append(int(size))
+            times.append(float(mean_time))
     plt.plot(sizes, times, marker='o', linestyle='-')
     plt.title('Среднее время')
     plt.xlabel('Размер матрицы')
